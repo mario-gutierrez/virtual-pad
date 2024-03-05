@@ -5,5 +5,4 @@ const AddToDom = (text) => {
     document.getElementsByTagName('body')[0].appendChild(par);
 }
 
-AddToDom("Hello world");
 export { AddToDom };
