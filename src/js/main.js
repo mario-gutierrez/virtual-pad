@@ -9,6 +9,16 @@ const AddToDom = (text) => {
     document.getElementsByTagName('body')[0].appendChild(par);
 }
 
+const DrawCircle = (p, canvas, context, radius, lineWidth, fillColor, lineColor) => {
+    context.beginPath();
+    context.arc(p.x * canvas.width, p.y * canvas.height, radius, 0, 2 * Math.PI, false);
+    context.fillStyle = fillColor;
+    context.fill();
+    context.lineWidth = lineWidth;
+    context.strokeStyle = lineColor;
+    context.stroke();
+}
+
 const canvasElement = document.getElementById("output_canvas");
 const canvasCtx = canvasElement.getContext("2d");
 
@@ -38,12 +48,20 @@ const results = handLandmarker.detect(image);
 canvasCtx.save();
 canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 if (results.landmarks) {
+    console.log(results);
     for (const landmarks of results.landmarks) {
         DrawingUtils.drawConnectors(canvasCtx, landmarks, Hands.HAND_CONNECTIONS, {
             color: "#00FF00",
-            lineWidth: 5
+            lineWidth: 2
         });
         DrawingUtils.drawLandmarks(canvasCtx, landmarks, { color: "#FF0000", lineWidth: 2 });
+        // See hand-landmarks.png in mediapipe_info folder
+        // Ref: https://developers.google.com/mediapipe/solutions/vision/hand_landmarker
+        // Thumb tip position
+        DrawCircle(landmarks[4], canvasElement, canvasCtx, 8, 2, '#00aaff', '#ff00ff');
+        // Index finger tip position
+        DrawCircle(landmarks[8], canvasElement, canvasCtx, 8, 2, '#00ff00', '#00aaff');
+
     }
 }
 canvasCtx.restore();
